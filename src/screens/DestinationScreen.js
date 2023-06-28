@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import React from 'react'
 import { Avatar, Icon } from "react-native-elements";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors, parameters } from "../global/styles";
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;  //get height dimension of device
+const SCREEN_WIDTH = Dimensions.get('window').width;    ////get width dimension of device
 
 
 const DestinationScreen = () => {
@@ -23,17 +23,17 @@ const DestinationScreen = () => {
             <TouchableOpacity>
                 <View style={styles.view3}>
                     <Avatar 
-                    rounded
-                    avatarStyle={{}}
-                    size={30}
-                    source={require('../../assets/blankProfilePic.jpg')}
-                    />
-                    <Text style={{marginLeft:5}}>For Someone</Text>
-                    <Icon 
-                    type='material-community'
-                    name='chevron-down'
-                    color={colors.grey1}
-                    size={26}
+                        rounded
+                        avatarStyle={{}}
+                        size={30}
+                        source={require('../../assets/blankProfilePic.jpg')}
+                        />
+                        <Text style={{marginLeft:5}}>For Someone</Text>
+                        <Icon 
+                        type='material-community'
+                        name='chevron-down'
+                        color={colors.grey1}
+                        size={26}
                     />
                 </View>
             </TouchableOpacity>
