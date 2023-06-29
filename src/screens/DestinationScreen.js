@@ -1,44 +1,73 @@
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import { Avatar, Icon } from "react-native-elements";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { colors, parameters } from "../global/styles";
+import {GOOGLE_MAPS_APIKEY} from '@env'
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;  //get height dimension of device
-const SCREEN_WIDTH = Dimensions.get('window').width;    ////get width dimension of device
+const SCREEN_HEIGHT = Dimensions.get('window').height;  // get height dimension of device
+const SCREEN_WIDTH = Dimensions.get('window').width;    // get width dimension of device
 
 
-const DestinationScreen = () => {
+const DestinationScreen = ({navigation}) => { 
+
+    const textInput1 = useRef(4)
+    const textInput2 = useRef(5)
   return (
-    <View>
+    <>
+    <View style={styles.view2}>
         <View style={styles.view1}>
-            <Icon
-            type='material-community'
-            name='arrow-left'
-            color={colors.grey1}
-            size={32}
+                <Icon
+                type='material-community'
+                name='arrow-left'
+                color={colors.grey1}
+                size={32}
+                onPress={()=>navigation.goBack()}
+                />
+            </View>
+            <View style={styles.view2}>
+                <TouchableOpacity>
+                    <View style={{top:19,alignItems:'center'}}>
+                        <View style={styles.view3}>
+                            <Avatar 
+                                rounded
+                                avatarStyle={{}}
+                                size={30}
+                                source={require('../../assets/blankProfilePic.jpg')}
+                                />
+                                <Text style={{marginLeft:5}}>For Someone</Text>
+                                <Icon 
+                                type='material-community'
+                                name='chevron-down'
+                                color={colors.grey1}
+                                size={26}
+                            />
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            <GooglePlacesAutocomplete 
+                nearbyPlacesAPI="GooglePlacesSearch"
+                placeholder='Going to...'
+                listViewDisplayed='auto'
+                debounce={400}
+                currentLocation={false}
+                ref={textInput1}
+                minLength={2}
+                enablePoweredByContainer={false}
+                fetchDetails={true}
+                autoFocus={true}
+                styles={autoComplete}
+                query={
+                    {
+                        key: GOOGLE_MAPS_APIKEY, 
+                        language:'en'
+                    }
+                }
             />
         </View>
-        <View style={styles.view2}>
-            <TouchableOpacity>
-                <View style={styles.view3}>
-                    <Avatar 
-                        rounded
-                        avatarStyle={{}}
-                        size={30}
-                        source={require('../../assets/blankProfilePic.jpg')}
-                        />
-                        <Text style={{marginLeft:5}}>For Someone</Text>
-                        <Icon 
-                        type='material-community'
-                        name='chevron-down'
-                        color={colors.grey1}
-                        size={26}
-                    />
-                </View>
-            </TouchableOpacity>
-        </View>
-    </View>
+    </>
   )
 }
 
@@ -46,7 +75,7 @@ export default DestinationScreen
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 0,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
@@ -74,7 +103,7 @@ const styles = StyleSheet.create({
       marginTop:2,   
       marginBottom:10,
       backgroundColor: colors.white,
-      height:30,
+      height:45,
       zIndex: 10
     },
     
@@ -120,7 +149,7 @@ const autoComplete = {
     },
     container: {
         paddingTop:20,
-        flex: 1,
+        //flex: 1,
         backgroundColor:colors.white
             },
     
