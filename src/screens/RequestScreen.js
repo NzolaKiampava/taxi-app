@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-export default function RequestScreen() {
+export default function RequestScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.view1}>
@@ -45,9 +45,11 @@ export default function RequestScreen() {
             />
           </View>
           <View>
-            <View style={styles.view6}>
-              <Text style={styles.text1}>From where ?</Text>
-            </View>
+            <TouchableOpacity onPress={()=>navigation.navigate("DestinationScreen")}>
+              <View style={styles.view6}>
+                <Text style={styles.text1}>From where ?</Text>
+              </View>
+            </TouchableOpacity>
             <View style={styles.view7}>
               <TouchableOpacity>
                 <View style={styles.view5}>
