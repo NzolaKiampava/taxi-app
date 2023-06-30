@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import React, {useEffect, useRef} from 'react'
 import { Avatar, Icon } from "react-native-elements";
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { colors, parameters } from "../global/styles";
 import {GOOGLE_MAPS_APIKEY} from '@env'
@@ -47,25 +47,32 @@ const DestinationScreen = ({navigation}) => {
                     </View>
                 </TouchableOpacity>
             </View>
-            <GooglePlacesAutocomplete 
-                nearbyPlacesAPI="GooglePlacesSearch"
-                placeholder='Going to...'
-                listViewDisplayed='auto'
-                debounce={400}
-                currentLocation={false}
-                ref={textInput1}
-                minLength={2}
-                enablePoweredByContainer={false}
-                fetchDetails={true}
-                autoFocus={true}
-                styles={autoComplete}
-                query={
-                    {
-                        key: GOOGLE_MAPS_APIKEY, 
-                        language:'en'
+            <ScrollView
+                nestedScrollEnabled={true}
+            >
+                <GooglePlacesAutocomplete 
+                    nearbyPlacesAPI="GooglePlacesSearch"
+                    placeholder='Going to...'
+                    listViewDisplayed='auto'
+                    debounce={400}
+                    currentLocation={false}
+                    ref={textInput1}
+                    minLength={2}
+                    enablePoweredByContainer={false}
+                    fetchDetails={true}
+                    autoFocus={false}
+                    returnKeyType={'default'}
+                    styles={autoComplete}
+                    query={
+                        {
+                            key: GOOGLE_MAPS_APIKEY, 
+                            language:'en'
+                        }
                     }
-                }
-            />
+
+                    disableScroll={true} // <--- 2. this works
+                />
+            </ScrollView>
         </View>
     </>
   )
@@ -156,5 +163,32 @@ const autoComplete = {
     textInputContainer: {
         flexDirection: 'row',
     },
+
+    poweredContainer: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5,
+        borderColor: '#c8c7cc',
+        borderTopWidth: 0.5,
+      },
+      powered: {},
+      listView: {},
+      row: {
+        backgroundColor: '#FFFFFF',
+        padding: 13,
+        height: 44,
+        flexDirection: 'row',
+      },
+      separator: {
+        height: 0.5,
+        backgroundColor: '#c8c7cc',
+      },
+      description: {},
+      loader: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        height: 20,
+      },
 
 }
