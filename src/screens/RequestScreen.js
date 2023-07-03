@@ -17,6 +17,7 @@ export default function RequestScreen({navigation}) {
           name='arrow-left'
           color={colors.grey1}
           size={32}
+          onPress={()=>navigation.goBack()}
         />
       </View>
       <View style={styles.view2}>
