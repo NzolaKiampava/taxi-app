@@ -1,14 +1,18 @@
 import { StyleSheet, Text, View, Image, Dimensions, Touchable } from 'react-native'
-import React from 'react'
+import React, {useState} from 'react'
 import { colors, parameters } from "../global/styles";
 import MapComponent from '../components/MapComponent';
 import { Avatar, Icon } from "react-native-elements";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { OriginContext,DestinationContext } from '../contexts/contexts';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function RequestScreen({navigation}) {
+  const {origin,dispatchOrigin} = useContext(OriginContext)
+  const [userOrigin, setUserOrigin] = useState({latitude:origin.latitude,longitude:origin.longitude})
+
   return (
     <View style={styles.container}>
       <View style={styles.view1}>
@@ -69,7 +73,7 @@ export default function RequestScreen({navigation}) {
           </View>
         </View>
       </View>
-      <MapComponent/>
+      <MapComponent userOrigin={userOrigin}/>
     </View>
   )
 }
