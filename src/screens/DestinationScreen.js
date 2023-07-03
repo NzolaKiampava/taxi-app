@@ -5,12 +5,17 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { colors, parameters } from "../global/styles";
 import {GOOGLE_MAPS_APIKEY} from '@env'
+import { OriginContext,DestinationContext } from '../contexts/contexts';
+import { useContext } from 'react';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;  // get height dimension of device
 const SCREEN_WIDTH = Dimensions.get('window').width;    // get width dimension of device
 
 
 const DestinationScreen = ({navigation}) => { 
+
+    const {dispatchOrigin} = useContext(OriginContext)
+    const {dispatchDestination} = useContext(DestinationContext)
 
     const textInput1 = useRef(4)
     const textInput2 = useRef(5)
@@ -48,27 +53,37 @@ const DestinationScreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             <ScrollView
-                nestedScrollEnabled={true}
+                nestedScrollEnabled={true}  // <---- 1.
+                keyboardShouldPersistTaps='always'
             >
                 <GooglePlacesAutocomplete 
                     nearbyPlacesAPI="GooglePlacesSearch"
                     placeholder='Going to...'
-                    listViewDisplayed='auto'
+                    listViewDisplayed={false}
                     debounce={400}
                     currentLocation={false}
                     ref={textInput1}
                     minLength={2}
                     enablePoweredByContainer={false}
                     fetchDetails={true}
-                    autoFocus={false}
-                    returnKeyType={'default'}
+                    autoFocus={true}
                     styles={autoComplete}
                     query={
-                        {
+                        { 
                             key: GOOGLE_MAPS_APIKEY, 
                             language:'en'
                         }
                     }
+                    onPress={(data, datails = null)=>{
+                        dispatchOrigin({type:"ADD_ORIGIN",payload:{
+                            latitude:details.geometry.location.lat,
+                            longitude:details.geometry.location.lng,
+                            address:details.formatted_address,
+                            name:details.name
+                        }})
+
+                        navigation.goBack()
+                    }}
 
                     disableScroll={true} // <--- 2. this works
                 />
@@ -158,37 +173,10 @@ const autoComplete = {
         paddingTop:20,
         //flex: 1,
         backgroundColor:colors.white
-            },
-    
+    },
+  
     textInputContainer: {
         flexDirection: 'row',
     },
-
-    poweredContainer: {
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        borderBottomRightRadius: 5,
-        borderBottomLeftRadius: 5,
-        borderColor: '#c8c7cc',
-        borderTopWidth: 0.5,
-      },
-      powered: {},
-      listView: {},
-      row: {
-        backgroundColor: '#FFFFFF',
-        padding: 13,
-        height: 44,
-        flexDirection: 'row',
-      },
-      separator: {
-        height: 0.5,
-        backgroundColor: '#c8c7cc',
-      },
-      description: {},
-      loader: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        height: 20,
-      },
 
 }
