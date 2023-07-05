@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { Avatar, Icon } from "react-native-elements";
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { colors, parameters } from "../global/styles";
 import {GOOGLE_MAPS_APIKEY} from '@env'
-import { OriginContext,DestinationContext } from '../contexts/contexts';
+import { OriginContext, DestinationContext } from '../contexts/contexts';
 import { useContext } from 'react';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;  // get height dimension of device
@@ -19,6 +19,8 @@ const DestinationScreen = ({navigation}) => {
 
     const textInput1 = useRef(4)
     const textInput2 = useRef(5)
+
+    const[destination,setDestination] = useState(false)
   return (
     <>
     <View style={styles.view2}>
@@ -52,42 +54,83 @@ const DestinationScreen = ({navigation}) => {
                     </View>
                 </TouchableOpacity>
             </View>
-            <ScrollView
-                nestedScrollEnabled={true}  // <---- 1.
-                keyboardShouldPersistTaps='always'
-            >
-                <GooglePlacesAutocomplete 
-                    nearbyPlacesAPI="GooglePlacesSearch"
-                    placeholder='Going to...'
-                    listViewDisplayed={false}
-                    debounce={400}
-                    currentLocation={false}
-                    ref={textInput1}
-                    minLength={2}
-                    enablePoweredByContainer={false}
-                    fetchDetails={true}
-                    autoFocus={true}
-                    styles={autoComplete}
-                    query={
-                        { 
-                            key: GOOGLE_MAPS_APIKEY, 
-                            language:'en'
+            {destination === false &&
+                <ScrollView
+                    nestedScrollEnabled={true}  // <---- 1.
+                    keyboardShouldPersistTaps='always'
+                >
+                    <GooglePlacesAutocomplete 
+                        nearbyPlacesAPI="GooglePlacesSearch"
+                        placeholder='From...'
+                        listViewDisplayed={false}
+                        debounce={400}
+                        currentLocation={false}
+                        ref={textInput1}
+                        minLength={2}
+                        enablePoweredByContainer={false}
+                        fetchDetails={true}
+                        autoFocus={true}
+                        styles={autoComplete}
+                        query={
+                            { 
+                                key: GOOGLE_MAPS_APIKEY, 
+                                language:'en'
+                            }
                         }
-                    }
-                    onPress={(data, datails = null)=>{
-                        dispatchOrigin({type:"ADD_ORIGIN",payload:{
-                            latitude:details.geometry.location.lat,
-                            longitude:details.geometry.location.lng,
-                            address:details.formatted_address,
-                            name:details.name
-                        }})
+                        onPress={(data, details = null)=>{
+                            dispatchOrigin({type:"ADD_ORIGIN",payload:{
+                                latitude:details.geometry.location.lat,
+                                longitude:details.geometry.location.lng,
+                                address:details.formatted_address,
+                                name:details.name
+                            }})
 
-                        navigation.goBack()
-                    }}
+                            setDestination(true)
+                        }}
 
-                    disableScroll={true} // <--- 2. this works
-                />
-            </ScrollView>
+                        disableScroll={true} // <--- 2. this works
+                    />
+                </ScrollView>
+             }
+
+            { destination === true &&             
+                <ScrollView
+                    nestedScrollEnabled={true}  // <---- 1.
+                    keyboardShouldPersistTaps='always'
+                >
+                    <GooglePlacesAutocomplete 
+                        nearbyPlacesAPI="GooglePlacesSearch"
+                        placeholder='Going to...'
+                        listViewDisplayed={false}
+                        debounce={400}
+                        currentLocation={false}
+                        ref={textInput2}
+                        minLength={2}
+                        enablePoweredByContainer={false}
+                        fetchDetails={true}
+                        autoFocus={true}
+                        styles={autoComplete}
+                        query={
+                            { 
+                                key: GOOGLE_MAPS_APIKEY, 
+                                language:'en'
+                            }
+                        }
+                        onPress={(data, details = null)=>{
+                            dispatchDestination({type:"ADD_DESTINATION",payload:{
+                                latitude:details.geometry.location.lat,
+                                longitude:details.geometry.location.lng,
+                                address:details.formatted_address,
+                                name:details.name
+                            }})
+
+                            navigation.goBack()
+                        }}
+
+                        disableScroll={true} // <--- 2. this works
+                    />
+                </ScrollView> 
+            }  
         </View>
     </>
   )
