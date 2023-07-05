@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Dimensions, Touchable } from 'react-native'
-import React, {useState} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import { colors, parameters } from "../global/styles";
 import MapComponent from '../components/MapComponent';
 import { Avatar, Icon } from "react-native-elements";
@@ -12,6 +12,20 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default function RequestScreen({navigation}) {
   const {origin,dispatchOrigin} = useContext(OriginContext)
   const [userOrigin, setUserOrigin] = useState({latitude:origin.latitude,longitude:origin.longitude})
+
+  const {destination,dispatchDestination} = useContext(DestinationContext)
+  const [userDestination, setUserDestination] = useState({latitude:destination.latitude,longitude:destination.longitude})
+
+  //if the origin changes it will update UserOrigin
+  useEffect(()=>{
+    setUserOrigin(
+      {latitude:origin.latitude, longitude:origin.longitude}
+    );
+    setUserDestination(
+      {latitude:destination.latitude, longitude:destination.longitude}
+    )
+  }, [origin, destination])
+
 
   return (
     <View style={styles.container}>
@@ -73,7 +87,7 @@ export default function RequestScreen({navigation}) {
           </View>
         </View>
       </View>
-      <MapComponent userOrigin={userOrigin}/>
+      <MapComponent userOrigin={userOrigin} userDestination={userDestination}/>
     </View>
   )
 }
